@@ -34,7 +34,7 @@ GhrossChain is a payments website where users can easily send assets to receiver
 
 
 ## Images
-![msg1401714470-49086](https://github.com/aviral10x/onyx-lens-protocol/assets/91749530/a1ab1441-260e-4944-9403-47d98bca59df)
+
 
 
 
