@@ -130,65 +130,15 @@ const preferenceAbi = [
     type: 'function',
   },
 ];
-const chronicle = [
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'oracle',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'nonpayable',
-    type: 'constructor',
-  },
-  {
-    inputs: [],
-    name: 'chronicle',
-    outputs: [
-      {
-        internalType: 'contract IChronicle',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'read',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-];
-const chronicleAddress = '0x50D146d26A40721FcE72bcF0AE95d56f5D4Aa7c0';
-const web3Modal = new Web3Modal();
-const connection = await web3Modal.connect();
-const provider = new ethers.providers.Web3Provider(connection);
-const signer = provider.getSigner();
-const contract = new ethers.Contract(chronicleAddress, chronicle, signer);
 export default function SendAssets() {
-  const [oracle, setOracle] = useState(false);
+
   const [enteredAddress, setEnteredAddress] = useState('');
   const [receiverChain, setReceiverChain] = useState('');
   const [preference, setPreference] = useState([]);
   const [correctAddress, setCorrectAddress] = useState('');
   const [inputs, setInputs] = useState(['']);
   const [amount, setAmount] = useState(['']);
-  const [liveamount, setLiveamount] = useState(0);
+  
 
   // Function to handle adding x`a new input field
   const addInput = () => {
@@ -197,15 +147,7 @@ export default function SendAssets() {
   const handleInputChange = async (e) => {
     setEnteredAddress(e.target.value);
   };
-  async function handlePriceChange() {
-    setOracle(true);
-    const txn = await contract.read();
-    console.log(Number(txn[0]._hex));
-    const livePricee = Number(txn[0]._hex) / 10000000000;
-    const livePrice = livePricee / 100000000;
-    const equiAmount = amount / livePrice;
-    setLiveamount(equiAmount);
-  }
+ 
   async function checkAddress() {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
@@ -368,7 +310,7 @@ export default function SendAssets() {
                     />
                     <input
                       type="text"
-                      placeholder="$50"
+                      placeholder="1 GHO"
                       onChange={(e) =>
                         handleInputChangeee(index, e.target.value)
                       }
@@ -379,23 +321,14 @@ export default function SendAssets() {
                       className="px-3 py-2 bg-red-500 text-white rounded-md">
                       Remove
                     </button>
-                    <button
-                      onClick={handlePriceChange}
-                      className="px-3 py-2 ml-4 mr-6 bg-green-500 text-white rounded-md">
-                      Get Equivalent price in Ethers
-                    </button>
-                    <h1 className="ml-6">{liveamount} ETH</h1>
+                    
                   </div>
                 </>
               ))}
-              <button
-                onClick={addInput}
-                className="px-3 py-2 bg-blue-500 text-white rounded-md">
-                Add Input
-              </button>
+              
             </div>
             <button
-              onClick={handlePriceChange}
+             
               className="px-3 py-2 ml-4 mr-6 bg-green-500 text-white rounded-md">
              Send Multiple Transactions in a Single Click for free 
             </button>
