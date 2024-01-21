@@ -34,10 +34,4 @@ Hence we have come up with a solution where in sender can send any asset from an
 
 
 
-## Images
 
-
-
-
-
-## Roadmap
