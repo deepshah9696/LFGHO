@@ -3,151 +3,28 @@
 import { useState } from 'react';
 import { ethers } from 'ethers';
 import Web3Modal from 'web3modal';
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid';
-const preferenceAddress = '0xf1EC58139bb64a039E8AdE7FBAE4f7070CFdb8FB';
-const preferenceAbi = [
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_primaryAddress',
-        type: 'address',
-      },
-      {
-        internalType: 'address[]',
-        name: '_secondaryAddresses',
-        type: 'address[]',
-      },
-      {
-        internalType: 'string',
-        name: '_chainPreference',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_tokenPreference',
-        type: 'string',
-      },
-    ],
-    name: 'registerUser',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'userAddress',
-        type: 'address',
-      },
-    ],
-    name: 'UserRegistered',
-    type: 'event',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'secondary',
-        type: 'address',
-      },
-    ],
-    name: 'getPrimaryAddress',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '_userAddress',
-        type: 'address',
-      },
-    ],
-    name: 'getUserPreferences',
-    outputs: [
-      {
-        internalType: 'address',
-        name: 'primaryAddress',
-        type: 'address',
-      },
-      {
-        internalType: 'address[]',
-        name: 'secondaryAddresses',
-        type: 'address[]',
-      },
-      {
-        internalType: 'string',
-        name: 'chainPreference',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'tokenPreference',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
-    name: 'users',
-    outputs: [
-      {
-        internalType: 'address',
-        name: 'primaryAddress',
-        type: 'address',
-      },
-      {
-        internalType: 'string',
-        name: 'chainPreference',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'tokenPreference',
-        type: 'string',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-];
-export default function SendAssets() {
+import preferenceAbi from '../abi/preference.json';
+import routerAbi from '../abi/router.json';
+import erc20Abi from '../abi/ERC20.json';
+const preferenceAddress = '0x214436D1541201B127e28F39317bDAe4a8Ee9Bfc';
+const sourceRouterAddress = '0x0bf3de8c5d3e8a2b34d2beeb17abfcebaf363a59';
+const destinationChainSelector = '3478487238524512106';
 
+const tokenAddress = '0xc4bF5CbDaBE595361438F8c6a187bDc330539c60';
+export default function SendAssets() {
   const [enteredAddress, setEnteredAddress] = useState('');
   const [receiverChain, setReceiverChain] = useState('');
+  const [assetpref , setAssetpref] = useState('')
   const [preference, setPreference] = useState([]);
   const [correctAddress, setCorrectAddress] = useState('');
-  const [inputs, setInputs] = useState(['']);
+const [inputValue, setInputValue] = useState('');
   const [amount, setAmount] = useState(['']);
-  
 
-  // Function to handle adding x`a new input field
-  const addInput = () => {
-    setInputs([...inputs, '']);
-  };
+ 
   const handleInputChange = async (e) => {
     setEnteredAddress(e.target.value);
   };
- 
+
   async function checkAddress() {
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
@@ -163,81 +40,75 @@ export default function SendAssets() {
     console.log(pref);
     setPreference(pref);
     setReceiverChain(pref[2]);
+    setAssetpref(pref[3]);
     console.log(txn);
 
     if (txn != enteredAddress)
-      window.alert(`User's Preferred Address is ${txn}`);
     setCorrectAddress(txn);
   }
-  // Function to handle input changes
-  const handleInputChangee = (index, value) => {
-    const updatedInputs = [...inputs];
-    updatedInputs[index] = value;
-    setInputs(updatedInputs);
-  };
-  const handleInputChangeee = (index, value) => {
-    const updatedInputs = [...inputs];
-    updatedInputs[index] = value;
-    setAmount(updatedInputs);
-    console.log(amount);
-  };
-
-  // Function to handle removing an input field
-  const removeInput = (index) => {
-    const updatedInputs = [...inputs];
-    updatedInputs.splice(index, 1);
-    setInputs(updatedInputs);
-  };
-  const [nameData, setNameData] = useState({
-    daoName: '',
-  });
-  const [selectedOption, setSelectedOption] = useState('');
-  const [selectedCurrency, setSelectedCurrency] = useState('');
-  const handleOptionChange = (event) => {
-    setSelectedOption(event.target.value);
-  };
-  const handleCurrencyChange = (event) => {
-    setSelectedCurrency(event.target.value);
-  };
-  async function sendAssets(event) {
-    window.alert('Sending 0.265 eth to users preferred address on base goerli');
+ 
+  const bridgeAssets = async (event) => {
     event.preventDefault();
-
     const web3Modal = new Web3Modal();
     const connection = await web3Modal.connect();
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = await provider.getSigner();
-    const contract = new ethers.Contract(
-      '0x9684E0642EDad90Fc5ghhj56f564f2FC99F43',
-      preferenceAbi,
+    const sourceRouter = new ethers.Contract(
+      '0x0bf3de8c5d3e8a2b34d2beeb17abfcebaf363a59',
+      routerAbi,
       signer
     );
-    // const txn = await contract.sendAssetsCrosasChain(
-    //   '0x50D146d26A40721FcE72bcF0AE95d56f5D4Aa7c0',
-    //   preferredChain,
-    //   toAddress,amount
-    // );
-  }
-  const deployContract = async (event) => {
-    event.preventDefault();
-    console.log(nameData.daoName, inputs, selectedOption, selectedCurrency);
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(
-      '0x9684E0642EDad90Fc542c56ff2FC99FE435F1238',
-      preferenceAbi,
+    const tokenAmounts = [
+      {
+        token: '0xc4bF5CbDaBE595361438F8c6a187bDc330539c60',
+        amount: '1000000000000000000',
+      },
+    ];
+    const functionSelector = ethers.utils
+      .id('CCIP EVMExtraArgsV1')
+      .slice(0, 10);
+    //  "extraArgs" is a structure that can be represented as [ 'uint256']
+    // extraArgs are { gasLimit: 0 }
+    // we set gasLimit specifically to 0 because we are not sending any data so we are not expecting a receiving contract to handle data
+
+    const extraArgs = ethers.utils.defaultAbiCoder.encode(['uint256'], [0]);
+
+    const encodedExtraArgs = functionSelector + extraArgs.slice(2);
+  const handleInputChange = (event) => {
+    // Update the state with the new input value
+    setInputValue(event.target.value);
+  };
+    const message = {
+      receiver: ethers.utils.defaultAbiCoder.encode(
+        ['address'],
+        [correctAddress]
+      ),
+      data: '0x', // no data
+      tokenAmounts: tokenAmounts,
+      feeToken: ethers.constants.AddressZero, // If fee token address is provided then fees must be paid in fee token.
+      extraArgs: encodedExtraArgs,
+    };
+    const fees = await sourceRouter.getFee('3478487238524512106', message);
+    console.log('hey');
+    console.log(`Estimated fees (wei): ${fees}`);
+    const erc20 = new ethers.Contract(
+      '0xc4bF5CbDaBE595361438F8c6a187bDc330539c60',
+      erc20Abi,
       signer
     );
-    const txn = await contract.registerUser(
-      nameData.daoName,
-      inputs,
-      selectedOption,
-      selectedCurrency
+    console.log(erc20);
+    let sendTx, approvalTx;
+    approvalTx = await erc20.approve(sourceRouterAddress, "1000000000000000000" );
+    await approvalTx.wait(); // wait for the transaction to be mined
+    console.log(
+      `approved router ${sourceRouterAddress} to spend ${amount} of token ${tokenAddress}. Transaction: ${approvalTx.hash}`
     );
-    await txn.wait();
-    console.log(txn);
+
+    sendTx = await sourceRouter.ccipSend(destinationChainSelector, message, {
+      value: fees,
+    });
+    const receipt = await sendTx.wait();
+    console.log(receipt)// fees are send as value since we are paying the fees in native
   };
 
   return (
@@ -252,7 +123,7 @@ export default function SendAssets() {
         Send Assets
       </h1>
       <form
-        onSubmit={deployContract}
+        onSubmit={bridgeAssets}
         style={{
           display: 'flex',
           justifyContent: 'center',
@@ -288,49 +159,31 @@ export default function SendAssets() {
                   </button>
                 </div>
               </div>
-              {inputs.map((input, index) => (
-                <>
-                  {' '}
-                  <label
-                    htmlFor="first-name"
-                    className="block text-sm font-medium leading-6 text-gray-900">
-                    Enter Receiver address
-                  </label>
-                  <div
-                    key={index}
-                    className="flex items-center mb-2">
-                    <input
-                      type="text"
-                      placeholder="Enter Address"
-                      value={input}
-                      onChange={(e) =>
-                        handleInputChangee(index, e.target.value)
-                      }
-                      className="w-64 p-2 border rounded-md mr-2"
-                    />
-                    <input
-                      type="text"
-                      placeholder="1 GHO"
-                      onChange={(e) =>
-                        handleInputChangeee(index, e.target.value)
-                      }
-                      className="w-16 p-2 border rounded-md mr-2"
-                    />
-                    <button
-                      onClick={() => removeInput(index)}
-                      className="px-3 py-2 bg-red-500 text-white rounded-md">
-                      Remove
-                    </button>
-                    
+
+              <>
+                {' '}
+                <label
+                  htmlFor="first-name"
+                  className="block text-sm font-medium leading-6 text-gray-900">
+                  Receiver's preferred address
+                </label>
+                <div className="flex items-center mb-2">
+                  <div className="w-128 p-2 border rounded-md mr-2">
+                    {correctAddress}
                   </div>
-                </>
-              ))}
-              
+                  <input
+                    type="text"
+                    placeholder="1 GHO"
+                    onChange={handleInputChange}
+                    className="w-16 p-2 border rounded-md mr-2"
+                  />
+                </div>
+              </>
             </div>
             <button
-             
+              onClick={bridgeAssets}
               className="px-3 py-2 ml-4 mr-6 bg-green-500 text-white rounded-md">
-             Send Multiple Transactions in a Single Click for free 
+              Send
             </button>
           </div>
         </div>
