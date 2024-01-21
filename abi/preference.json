@@ -1,0 +1,125 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_primaryAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "_secondaryAddresses",
+        "type": "address[]"
+      },
+      {
+        "internalType": "string",
+        "name": "_chainPreference",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_tokenPreference",
+        "type": "string"
+      }
+    ],
+    "name": "registerUser",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "userAddress",
+        "type": "address"
+      }
+    ],
+    "name": "UserRegistered",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "secondary",
+        "type": "address"
+      }
+    ],
+    "name": "getPrimaryAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_userAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getUserPreferences",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "primaryAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address[]",
+        "name": "secondaryAddresses",
+        "type": "address[]"
+      },
+      {
+        "internalType": "string",
+        "name": "chainPreference",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "tokenPreference",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "users",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "primaryAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "chainPreference",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "tokenPreference",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
