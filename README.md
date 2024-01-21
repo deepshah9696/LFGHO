@@ -11,8 +11,9 @@ GhrossChain is a payments website where users can easily send assets to receiver
    
 
 
-## Solution
 
+## Solution
+Hence we have come up with a solution where in sender can send any asset from any chain to the user, our solution will look upon that the receiver receives the right asset on the right chain and their preferred address
 
 
 ## Sponsors Used
