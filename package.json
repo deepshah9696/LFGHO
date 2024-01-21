@@ -1,15 +1,31 @@
 {
-  "name": "lfgho",
+  "name": "my-project",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.17.0",
+    "@headlessui/react": "^1.7.15",
+    "@heroicons/react": "^2.0.18",
+    "@huddle01/auth": "^0.0.1",
+    "@huddle01/react": "^0.0.11",
+    "@polybase/auth": "^0.6.1",
+    "@polybase/client": "^0.6.1",
+    "@polybase/eth": "^0.6.1",
+    "@polybase/react": "^0.6.1",
+    "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "@web3modal/wagmi": "^3.2.0",
+    "@worldcoin/idkit": "^0.5.1",
+    "connectkit": "^1.6.0",
+    "ethers": "5.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.12.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "viem": "^1.21.4",
+    "wagmi": "^1.4.13",
+    "web-vitals": "^2.1.4",
+    "web3modal": "1.9.12"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -18,11 +34,12 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "extends": "react-app"
   },
+  "eslintIgnore": [
+    "node_modules",
+    "build/*"
+  ],
   "browserslist": {
     "production": [
       ">0.2%",
@@ -34,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.2"
   }
 }
